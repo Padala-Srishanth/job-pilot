@@ -1,8 +1,12 @@
 const express = require('express');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const fs = require('fs');
 
 dotenv.config();
+
+// Ensure uploads directory exists
+if (!fs.existsSync('uploads')) fs.mkdirSync('uploads', { recursive: true });
 
 // Initialize Firebase (must be before routes)
 require('./config/firebase');
