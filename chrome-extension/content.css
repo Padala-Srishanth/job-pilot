@@ -1,0 +1,4 @@
+/* Minimal CSS for floating button — avoids conflicts with job sites */
+#jobpilot-float-btn * {
+  font-family: 'Segoe UI', system-ui, sans-serif !important;
+}
