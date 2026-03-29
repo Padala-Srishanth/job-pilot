@@ -20,10 +20,16 @@ const SCRAPERS = {
 /**
  * Scrape jobs from selected sources and save to Firestore
  */
-async function scrapeAndSave({ sources = ['internshala'], query = 'web development', location = 'India', pages = 1 } = {}) {
+async function scrapeAndSave({ sources = ['internshala'], query = 'web development', location = 'India', pages = 1, getCancelled = () => false } = {}) {
   const results = { total: 0, new: 0, duplicates: 0, errors: [], bySource: {} };
 
   for (const source of sources) {
+    // Check if cancelled
+    if (getCancelled()) {
+      console.log(`[Scraper] Cancelled — stopping before ${source}`);
+      break;
+    }
+
     const scraperFn = SCRAPERS[source];
     if (!scraperFn) {
       results.errors.push({ source, error: `Unknown source: ${source}` });

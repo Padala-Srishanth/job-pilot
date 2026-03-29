@@ -94,6 +94,7 @@ export const analyticsAPI = {
 export const scraperAPI = {
   run: (data) => api.post('/scraper/run', data),
   runSync: (data) => api.post('/scraper/run-sync', data),
+  stop: () => api.post('/scraper/stop'),
   getStatus: () => api.get('/scraper/status'),
 };
 

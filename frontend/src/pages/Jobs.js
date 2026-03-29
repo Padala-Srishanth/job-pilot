@@ -207,9 +207,24 @@ export default function Jobs() {
             </button>
           </div>
           {scraping && (
-            <div className="bg-dark-900 rounded-lg p-3 text-sm text-dark-400">
-              <HiOutlineRefresh className="w-4 h-4 animate-spin inline mr-2" />
-              Scraping in progress... This may take 30-60 seconds per source. A browser is running in the background.
+            <div className="bg-dark-900 rounded-lg p-3 text-sm text-dark-400 flex items-center justify-between">
+              <div>
+                <HiOutlineRefresh className="w-4 h-4 animate-spin inline mr-2" />
+                Scraping in progress... This may take 30-60 seconds per source.
+              </div>
+              <button
+                onClick={async () => {
+                  try {
+                    await scraperAPI.stop();
+                    toast.success('Scrape stopped');
+                    setScraping(false);
+                    fetchJobs();
+                  } catch { toast.error('Failed to stop'); }
+                }}
+                className="px-4 py-1.5 rounded-lg text-sm font-medium bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/30 transition-all flex-shrink-0"
+              >
+                Stop Scraping
+              </button>
             </div>
           )}
         </div>

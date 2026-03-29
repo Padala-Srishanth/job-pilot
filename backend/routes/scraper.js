@@ -6,6 +6,7 @@ const router = express.Router();
 
 // Track active scrape to prevent multiple simultaneous runs
 let isScrapingActive = false;
+let isCancelled = false;
 let lastScrapeResult = null;
 
 // Trigger a scrape
@@ -54,17 +55,30 @@ router.post('/run-sync', auth, async (req, res) => {
 
   const safePage = Math.min(Math.max(1, pages), 3);
   isScrapingActive = true;
+  isCancelled = false;
 
   try {
-    const result = await scrapeAndSave({ sources, query, location, pages: safePage });
+    const result = await scrapeAndSave({ sources, query, location, pages: safePage, getCancelled: () => isCancelled });
     result.completedAt = new Date().toISOString();
+    result.cancelled = isCancelled;
     lastScrapeResult = result;
     res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Scraping failed', error: error.message });
   } finally {
     isScrapingActive = false;
+    isCancelled = false;
   }
+});
+
+// Stop scraping
+router.post('/stop', auth, (req, res) => {
+  if (!isScrapingActive) {
+    return res.json({ message: 'No scrape is running' });
+  }
+  isScrapingActive = false;
+  isCancelled = true;
+  res.json({ message: 'Scrape stop requested' });
 });
 
 // Get scraping status
