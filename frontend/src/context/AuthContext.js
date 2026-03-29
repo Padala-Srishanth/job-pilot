@@ -3,6 +3,8 @@ import {
   auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
+  googleProvider,
   signOut,
   updateProfile,
   onAuthStateChanged
@@ -61,6 +63,13 @@ export function AuthProvider({ children }) {
     return res.data;
   };
 
+  const loginWithGoogle = async () => {
+    const result = await signInWithPopup(auth, googleProvider);
+    const res = await authAPI.sync({ name: result.user.displayName });
+    setUser(res.data.user);
+    return res.data;
+  };
+
   const logout = async () => {
     await signOut(auth);
     setUser(null);
@@ -76,6 +85,7 @@ export function AuthProvider({ children }) {
       token: firebaseUser, // truthy when logged in
       loading,
       login,
+      loginWithGoogle,
       register,
       logout,
       updateUser
