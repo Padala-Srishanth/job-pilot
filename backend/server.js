@@ -15,6 +15,7 @@ const { rateLimit } = require('./middleware/rateLimiter');
 const allowedOrigins = [
   'http://localhost:3000',
   'https://job-pilot.netlify.app',
+  'https://job-pilots.netlify.app',
   process.env.CLIENT_URL
 ].filter(Boolean);
 
