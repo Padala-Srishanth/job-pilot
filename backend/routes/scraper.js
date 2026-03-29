@@ -8,6 +8,16 @@ const router = express.Router();
 let isScrapingActive = false;
 let isCancelled = false;
 let lastScrapeResult = null;
+let scrapeStartTime = null;
+
+// Auto-reset stuck scrape flag after 5 minutes
+setInterval(() => {
+  if (isScrapingActive && scrapeStartTime && (Date.now() - scrapeStartTime > 5 * 60 * 1000)) {
+    console.log('[Scraper] Auto-resetting stuck scrape flag');
+    isScrapingActive = false;
+    isCancelled = false;
+  }
+}, 30000);
 
 // Trigger a scrape
 router.post('/run', auth, async (req, res) => {
@@ -56,6 +66,7 @@ router.post('/run-sync', auth, async (req, res) => {
   const safePage = Math.min(Math.max(1, pages), 3);
   isScrapingActive = true;
   isCancelled = false;
+  scrapeStartTime = Date.now();
 
   try {
     const result = await scrapeAndSave({ sources, query, location, pages: safePage, getCancelled: () => isCancelled });
@@ -73,12 +84,10 @@ router.post('/run-sync', auth, async (req, res) => {
 
 // Stop scraping
 router.post('/stop', auth, (req, res) => {
-  if (!isScrapingActive) {
-    return res.json({ message: 'No scrape is running' });
-  }
   isScrapingActive = false;
   isCancelled = true;
-  res.json({ message: 'Scrape stop requested' });
+  scrapeStartTime = null;
+  res.json({ message: 'Scrape stopped' });
 });
 
 // Get scraping status
