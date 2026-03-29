@@ -20,7 +20,7 @@ export default function Jobs() {
   const [applying, setApplying] = useState(null);
   const [scraping, setScraping] = useState(false);
   const [scrapeForm, setScrapeForm] = useState({
-    query: 'web development', sources: ['linkedin', 'indeed'], location: 'India', pages: 1
+    query: 'web development', sources: ['jsearch'], location: 'India', pages: 1
   });
 
   const fetchJobs = useCallback(async (page = 1) => {
@@ -113,7 +113,7 @@ export default function Jobs() {
           <h3 className="text-base font-semibold text-white mb-3 flex items-center gap-2">
             <HiOutlineGlobeAlt className="w-5 h-5 text-accent-green" /> Scrape Jobs from Real Websites
           </h3>
-          <p className="text-xs text-dark-400 mb-4">Puppeteer opens a headless browser, visits real job sites, and extracts listings into your database.</p>
+          <p className="text-xs text-dark-400 mb-4">Use <span className="text-yellow-400">JSearch API</span> for instant results (works everywhere), or Puppeteer scrapers for direct site scraping (works locally).</p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
             <div>
@@ -169,7 +169,8 @@ export default function Jobs() {
                 { id: 'naukri', label: 'Naukri', color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' },
                 { id: 'glassdoor', label: 'Glassdoor', color: 'bg-green-500/20 text-green-400 border-green-500/30' },
                 { id: 'foundit', label: 'Foundit', color: 'bg-orange-500/20 text-orange-400 border-orange-500/30' },
-                { id: 'timesjobs', label: 'TimesJobs', color: 'bg-red-500/20 text-red-400 border-red-500/30' }
+                { id: 'timesjobs', label: 'TimesJobs', color: 'bg-red-500/20 text-red-400 border-red-500/30' },
+                { id: 'jsearch', label: 'JSearch API', color: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30' }
               ].map(src => {
                 const isSelected = scrapeForm.sources.includes(src.id);
                 return (
@@ -193,7 +194,7 @@ export default function Jobs() {
               })}
             </div>
             <button
-              onClick={() => setScrapeForm(p => ({ ...p, sources: ['linkedin', 'indeed', 'internshala', 'naukri', 'glassdoor', 'foundit', 'timesjobs'] }))}
+              onClick={() => setScrapeForm(p => ({ ...p, sources: ['jsearch', 'linkedin', 'indeed', 'internshala', 'naukri', 'glassdoor', 'foundit', 'timesjobs'] }))}
               className="text-xs text-accent-green hover:underline mt-2"
             >
               Select All

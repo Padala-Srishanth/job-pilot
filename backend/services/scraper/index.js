@@ -5,9 +5,11 @@ const { scrapeIndeed } = require('./indeed');
 const { scrapeGlassdoor } = require('./glassdoor');
 const { scrapeFoundit } = require('./foundit');
 const { scrapeTimesJobs } = require('./timesjobs');
+const { searchJSearch } = require('./jsearch');
 const { db } = require('../../config/firebase');
 
-const SCRAPERS = {
+// Puppeteer-based scrapers (work locally, need Chrome)
+const PUPPETEER_SCRAPERS = {
   internshala: scrapeInternshala,
   naukri: scrapeNaukri,
   linkedin: scrapeLinkedIn,
@@ -16,6 +18,13 @@ const SCRAPERS = {
   foundit: scrapeFoundit,
   timesjobs: scrapeTimesJobs
 };
+
+// API-based scrapers (work everywhere, no Chrome needed)
+const API_SCRAPERS = {
+  jsearch: searchJSearch
+};
+
+const SCRAPERS = { ...PUPPETEER_SCRAPERS, ...API_SCRAPERS };
 
 /**
  * Scrape jobs from selected sources and save to Firestore
